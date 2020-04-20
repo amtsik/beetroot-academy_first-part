@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
+
 $formLanguages = [
         'ru' => [
             'value' => 'ru',
@@ -47,6 +51,7 @@ if (isset($_POST['name'], $_POST['surname'], $_POST['age'], $_POST['email'], $_P
             'value' => $_POST['language'],
         ],
     ];
+    $validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $assoc['age']['valid'] && $assoc['email']['valid'] && $assoc['password']['valid'] && $assoc['language']['valid'] ;
 }
 else {
     $assoc = [
@@ -69,9 +74,9 @@ else {
             'value' => '',
         ],
     ];
+    $validationForm = false;
 }
 
-$validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $assoc['age']['valid'] && $assoc['email']['valid'] && $assoc['password']['valid'] && $assoc['language']['valid'] ;
 
 ?>
 
