@@ -1,5 +1,19 @@
 <?php
-
+$formLanguages = [
+        'ru' => [
+            'value' => 'ru',
+            'language' => 'Русский',
+        ],
+        'ua' => [
+            'value' => 'ua',
+            'language' => 'Украинский',
+        ],
+        'en' => [
+            'value' => 'en',
+            'language' => 'English',
+        ],
+]
+;
 if (isset($_POST['name'], $_POST['surname'], $_POST['age'], $_POST['email'], $_POST['password'][0], $_POST['password'][1], $_POST['language'])) {
     $assoc = [
         'name' => [
@@ -59,7 +73,6 @@ else {
 
 $validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $assoc['age']['valid'] && $assoc['email']['valid'] && $assoc['password']['valid'] && $assoc['language']['valid'] ;
 
-
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +96,7 @@ $validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $asso
         ."<br>email is: " .$assoc['email']['value']
         ."<br>age is: " .$assoc['age']['value']
         ."<br>password: " .$assoc['password']['value']
-        ."<br>language " .$assoc['language']['value']
+        ."<br>language: " .$formLanguages[$assoc['language']['value']]['language']
         ?>
     </h1>
     <form method="post" action="registration.php" <?= $validationForm ? "hidden": ""?>>
@@ -122,9 +135,9 @@ $validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $asso
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Язык</label>
                 <select class="form-control" id="exampleFormControlSelect1" name="language" >
-                    <option >Русский</option>
-                    <option >Український</option>
-                    <option >English</option>
+                    <option value="<?=$formLanguages['ru']['value']?>" <?=$formLanguages['ru']['value'] == $assoc['language']['value'] ? "selected" : "" ?>><?=$formLanguages['ru']['language']?></option>
+                    <option value="<?=$formLanguages['ua']['value']?>" <?=$formLanguages['ua']['value'] == $assoc['language']['value'] ? "selected" : "" ?>><?=$formLanguages['ua']['language']?></option>
+                    <option value="<?=$formLanguages['en']['value']?>" <?=$formLanguages['en']['value'] == $assoc['language']['value'] ? "selected" : "" ?>><?=$formLanguages['en']['language']?></option>
                 </select>
             </div>
         </div>
