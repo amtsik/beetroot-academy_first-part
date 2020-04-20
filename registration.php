@@ -1,15 +1,67 @@
 <?php
-$assoc = [
-    'name' => "name",
-    'surname' => "surname",
-    'age' => "age",
-    'email' => "email@email",
-    'password' => [],
-    'gender' => [],
-];
 
-//var_dump($_POST);
+if (isset($_POST['name'], $_POST['surname'], $_POST['age'], $_POST['email'], $_POST['password'][0], $_POST['password'][1], $_POST['language'])) {
+    $assoc = [
+        'name' => [
+            'valid' => (bool)$_POST['name'] ? true : false,
+            'validClass' => (bool)$_POST['name'] ? 'is-valid' : "is-invalid",
+            'value' => $_POST['name'],
+        ],
+        'surname' => [
+            'valid' => (bool)$_POST['surname'] ? true : false,
+            'validClass' => (bool)$_POST['surname'] ? 'is-valid' : "is-invalid",
+            'value' => $_POST['surname'],
+        ],
+        'age' => [
+            'valid' => (bool)$_POST['age'] ? true : false,
+            'validClass' => (bool)$_POST['age'] ? 'is-valid' : "is-invalid",
+            'value' => $_POST['age'],
+        ],
+        'email' => [
+            'valid' => (bool)$_POST['email'] ? true : false,
+            'validClass' => (bool)$_POST['email'] ? 'is-valid' : "is-invalid",
+            'value' => $_POST['email'],
+        ],
+        'password' => [
+            'valid' => (bool)$_POST['password'][0] && ($_POST['password'][0] == $_POST['password'][1])  ? true : false,
+            'validClass' => (bool)$_POST['password'][0] && ($_POST['password'][0] == $_POST['password'][1])  ? 'is-valid' : "is-invalid",
+            'value' => $_POST['password'][0],
+        ],
+        'language' => [
+            'valid' => (bool)$_POST['language'],
+            'validClass' => "",
+            'value' => $_POST['language'],
+        ],
+    ];
+}
+else {
+    $assoc = [
+        'name' => [
+            'value' => '',
+        ],
+        'surname' => [
+            'value' => '',
+        ],
+        'age' => [
+            'value' => '',
+        ],
+        'email' => [
+            'value' => '',
+        ],
+        'password' => [
+            'value' => '',
+        ],
+        'language' => [
+            'value' => '',
+        ],
+    ];
+}
+
+$validationForm = $assoc['name']['valid'] && $assoc['surname']['valid'] && $assoc['age']['valid'] && $assoc['email']['valid'] && $assoc['password']['valid'] && $assoc['language']['valid'] ;
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,49 +70,61 @@ $assoc = [
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" >
 </head>
 <body>
-<br />
-<h1 <?=$_POST[name] ?? "hidden"?>>You name is:
-    <?=$_POST[name] ." " .$_POST[surname]
-    ."<br>email is: " .$_POST[email]
-    ."<br>year is: " .$_POST[age]
-    ."<br>password: " .($_POST[password][0] == $_POST[password][1] ? $_POST[password][0] : "пароль не правильный")
-    ."<br>gender "
-    .$_POST[gender][0] ?>
-</h1>
+<div class="container">
 
-<div class="container" <?=$_POST[name] ? "hidden" : ""?>>
-    <form method="post" action="registration.php">
+
+</div>
+
+<div class="container" >
+
+    <h1 <?= $validationForm ? "": "hidden"?>>
+        <?=
+         "You name is: " .$assoc['name']['value'] ." " .$assoc['surname']['value']
+        ."<br>email is: " .$assoc['email']['value']
+        ."<br>age is: " .$assoc['age']['value']
+        ."<br>password: " .$assoc['password']['value']
+        ."<br>language " .$assoc['language']['value']
+        ?>
+    </h1>
+    <form method="post" action="registration.php" <?= $validationForm ? "hidden": ""?>>
         <div class="form-group">
             <label for="formGroupExampleInput">Registration</label>
             <div class="">
                 <label for="">Имя</label>
-                <input type="text" class="form-control" id="formGroupNameInput" placeholder="Example input" value="<?=$_POST['name'] ?? $assoc['name'] ?>" name="name">
+                <input type="text" class="form-control <?= $assoc['name']['validClass'] ?? ""?>"  id="formGroupNameInput" placeholder="Имя" minlength="2" value="<?= $assoc['name']['value'] ?>" name="name">
             </div>
             <div class="">
                 <label for="">Фамилия</label>
-                <input type="text" class="form-control" id="formGroupSurnameInput" placeholder="Example input" value="<?= $_POST['surname'] ?? $assoc['surname'] ?>" name="surname">
+                <input type="text" class="form-control <?= $assoc['surname']['validClass'] ?? ""?>" id="formGroupSurnameInput" placeholder="Фамилия" minlength="2" value="<?= $assoc['surname']['value'] ?>" name="surname">
             </div>
             <div class="">
-                <label for="">Год</label>
-                <input type="text" class="form-control" id="formGroupAGEInput" placeholder="Example input" value="<?= $_POST['age'] ?? $assoc['age'] ?>" name="age">
+                <label for="">Возраст</label>
+                <input type="text" class="form-control <?= $assoc['age']['validClass'] ?? ""?>" id="formGroupAGEInput" placeholder="возраст" min="18" minlength="2" maxlength="2" value="<?= $assoc['age']['value'] ?>" name="age">
             </div>
             <div class="">
                 <label for="">Почта</label>
-                <input type="email" class="form-control" id="formGroupMailInput" placeholder="Example input" value="<?= $_POST['email'] ?? $assoc['email'] ?>" name="email">
+                <input type="email" class="form-control <?= $assoc['email']['validClass'] ?? ""?>" id="formGroupMailInput" placeholder="почта@домен" value="<?= $assoc['email']['value'] ?>" name="email">
             </div>
             <div class="form-group" >
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="examplePasswordPassword1" value="<?= $_POST['password'] ?? $assoc['password'][0] ?>" name="password[0]">
+                <label for="exampleInputPassword1">Пароль</label>
+                <input type="password" class="form-control <?= $assoc['password']['validClass'] ?? ""?>" id="examplePasswordPassword1" minlength="1" value="" name="password[0]">
+                <div class="invalid-feedback">
+                    Пароли не совпадают
+                </div>
             </div>
             <div class="form-group" >
-                <label for="exampleInputPassword2">Password</label>
-                <input type="password" class="form-control" id="examplePasswordPassword2" value="<?= $_POST['password'] ?? $assoc['password'][1] ?>" name="password[1]">
+                <label for="exampleInputPassword2">Подтвердить пароль</label>
+                <input type="password" class="form-control <?= $assoc['password']['validClass'] ?? ""?>" id="examplePasswordPassword2" minlength="1" value="" name="password[1]">
+                <div class="invalid-feedback">
+                    Пароли не совпадают
+                </div>
             </div>
             <div class="form-group">
-                <label for="exampleFormControlSelect1">Example select</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="gender[]" >
-                    <option >male</option>
-                    <option >female</option>
+                <label for="exampleFormControlSelect1">Язык</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="language" >
+                    <option >Русский</option>
+                    <option >Український</option>
+                    <option >English</option>
                 </select>
             </div>
         </div>
