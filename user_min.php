@@ -7,7 +7,12 @@ $assoc = [
     'surname' => "surname",
     'age' => "age",
     'email' => "email@email",
-    'gender' => [],
+    'gender' => [
+        "",
+        "male",
+        "female"
+    ],
+    'language' => "ru"
 ];
 
 if (!empty($_POST)) {
@@ -28,27 +33,27 @@ if (!empty($_POST)) {
 $lang = (!empty($_GET['lang'])) ? $_GET['lang'] : "ru";
 
 $labels = [
-        'ru' => [
-                'name' => 'имя',
-                'surname' => 'фамилия',
-                'age' => 'возраст',
-                'email' => 'почта',
-                'gender' => 'пол',
-        ],
-        'ua' => [
-                'name' => 'им\'я',
-                'surname' => 'фамилия',
-                'age' => 'вiк',
-                'email' => 'почта',
-                'gender' => 'стать',
-        ],
-        'en' => [
-                'name' => 'name',
-                'surname' => 'surname',
-                'age' => 'age',
-                'email' => 'email',
-                'gender' => 'gender',
-        ],
+    'ru' => [
+        'name' => 'имя',
+        'surname' => 'фамилия',
+        'age' => 'возраст',
+        'email' => 'почта',
+        'gender' => 'пол',
+    ],
+    'ua' => [
+        'name' => 'им\'я',
+        'surname' => 'фамилия',
+        'age' => 'вiк',
+        'email' => 'почта',
+        'gender' => 'стать',
+    ],
+    'en' => [
+        'name' => 'name',
+        'surname' => 'surname',
+        'age' => 'age',
+        'email' => 'email',
+        'gender' => 'gender',
+    ],
 ];
 
 switch ($lang){
@@ -63,106 +68,6 @@ switch ($lang){
         break;
 }
 
-
-//echo empty($labels['ua']);
-//echo "<br>";
-//var_dump($labels['ua']);
-//echo "<br>";
-//echo empty($lang['jp']);
-//echo "<br>";
-//echo "<br>";
-//
-//
-//$users = [
-//    [
-//        'name' => 'Bob',
-//        'surname' => 'Martin',
-//        'age' => 75,
-//        'gender' => 'man',
-//        'avatar' => 'https://i.ytimg.com/vi/sDnPs_V8M-c/hqdefault.jpg',
-//        'animals' => ['dog']
-//    ],
-//    [
-//        'name' => 'Alice',
-//        'surname' => 'Merton',
-//        'age' => 25,
-//        'gender' => 'woman',
-//        'avatar' => 'https://i.scdn.co/image/d44a5d71596b03b5dc6f5bbcc789458700038951',
-//        'animals' => ['dog', 'cat']
-//    ],
-//    [
-//        'name' => 'Jack',
-//        'surname' => 'Sparrow',
-//        'age' => 45,
-//        'gender' => 'man',
-//        'avatar' => 'https://pbs.twimg.com/profile_images/427547618600710144/wCeLVpBa_400x400.jpeg',
-//        'animals' => []
-//    ],
-//    [
-//        'name' => 'Angela',
-//        'surname' => 'Merkel',
-//        'age' => 65,
-//        'gender' => 'woman',
-//        'avatar' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Besuch_Bundeskanzlerin_Angela_Merkel_im_Rathaus_K%C3%B6ln-09916.jpg/330px-Besuch_Bundeskanzlerin_Angela_Merkel_im_Rathaus_K%C3%B6ln-09916.jpg',
-//        'animals' => ['dog', 'parrot', 'horse']
-//    ]
-//];
-//
-//echo "<br>";
-//echo "<br>";
-//
-//$name = array_column($users, 'name');
-//$ages = array_column($users, 'age');
-//var_dump($name);
-//
-//echo "<br>";
-//var_dump($ages);
-//echo "<br>";
-//echo "array_search(\"75\", name)";
-//echo "<br>";
-//echo "<br>";
-//
-//$key = array_search("75", $ages);
-//
-//echo "<br>";
-//var_dump($ages);
-//echo "<br> array_search: ";
-//var_dump($key);
-//
-//if ($key !== false ) {
-//    echo "sldkfjslakj";
-//} else {
-//
-//}
-//
-//echo "<br>";
-//echo "<br>";
-//var_dump($ages);
-//echo "<br> sort: ";
-//sort($ages);
-//echo "<br>";
-//echo "<br>";
-//var_dump($ages);
-//
-//echo "<br>";
-//echo "<br> rsort: ";
-//rsort($ages);
-//var_dump($ages);
-//echo "<br>";
-//
-//echo "<br>";
-//echo "<br> min: ";
-//var_dump(min($ages));
-//echo "<br>";
-//
-//echo "<br>";
-//echo "<br> max: ";
-//var_dump(max($ages));
-//echo "<br>";
-//
-//
-//
-//exit();
 
 ?>
 <!DOCTYPE html>
@@ -188,9 +93,9 @@ switch ($lang){
                 <label for=""><?= $translation['name']?></label>
                 <input type="text" class="form-control" id="formGroupNameInput" placeholder="<?=$assoc['name']?>" value="<?=$_POST['name'] ?? "" ?>" name="name">
                 <?php if (!empty($error['name'])) : ?>
-                <small id="passwordHelpInline" class="text-muted">
-                    <?=$error['name'] ?>
-                </small>
+                    <small id="passwordHelpInline" class="text-muted">
+                        <?=$error['name'] ?>
+                    </small>
                 <?php endif; ?>
             </div>
             <div class="">
@@ -224,22 +129,26 @@ switch ($lang){
                 <label for="exampleFormControlSelect1">Язык</label>
                 <select class="form-control" id="exampleFormControlSelect1" name="gender" >
                     <?php
-                    foreach ($formLanguages as $key => $value){
+                    foreach ($assoc['gender'] as $key => $value){
+                        echo "<br>key: ";
+                        var_dump($key);
+                        echo "<br>value: ";
+                        var_dump($value);
                         echo "<option  value=\""
                             .$key
                             ."\""
-                            .($value['value'] == $assoc['language']['value'] ? "selected" : "" )
+                            .($value ==$_POST['gender'] ? "selected" : "" )
                             .">"
-                            .$value['language']
+                            .$value
                             ."</option>";
                     }
                     ?>
                 </select>
             </div>
-            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
 </div>
 </body>
 </html>
