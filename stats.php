@@ -9,14 +9,6 @@ $users = [
         'animals' => ['dog']
     ],
     [
-        'name' => 'Bob',
-        'surname' => 'Sparrow',
-        'age' => 75,
-        'gender' => 'man',
-        'avatar' => 'https://i.ytimg.com/vi/sDnPs_V8M-c/hqdefault.jpg',
-        'animals' => ['dog']
-    ],
-    [
         'name' => 'Alice',
         'surname' => 'Merton',
         'age' => 25,
@@ -42,10 +34,86 @@ $users = [
     ]
 ];
 
+$animals =[];
+
+
+foreach ($users as $user){
+    $animals = array_merge($animals, $user['animals']);
+}
+$animals = array_unique($animals);
+
 if (!empty($_POST)){
     $_POST['age'] = (int)$_POST['age'];
     $users[] = $_POST;
 }
+
+if (!empty($_GET)){
+//    $usersCol = $_GET['sort'];
+//    var_dump($users);
+    switch ($_GET['sort']) {
+        case 'id':
+            if (!empty($_GET['order']) && $_GET['order'] == 'desk') {
+                krsort($users);
+            } else {
+                ksort($users);
+            }
+            $users = array_values($users);
+            break;
+    }
+}
+if (!empty($_GET) && !empty($_GET['filter'])){
+//    $usersCol = $_GET['sort'];
+//    var_dump($users);
+    switch ($_GET['filter']) {
+        case 'man':
+            foreach ($users as $key => $user) {
+                if ($user['gender'] !== 'man') {
+                    unset($users[$key]);
+                }
+            }
+            break;
+        case 'woman':
+            foreach ($users as $key => $user) {
+                if ($user['gender'] !== 'woman') {
+                    unset($users[$key]);
+                }
+            }
+            break;
+        case 'covid':
+            foreach ($users as $key => $user) {
+                if ((int)$user['age'] <= 60) {
+                    unset($users[$key]);
+                }
+            }
+            break;
+        default :
+            break;
+    }
+}
+if (!empty($_GET) && !empty($_GET['filter2'])){
+
+    $userAnimal = array_column($users, 'animals');
+    $userAnimalID = array_search(SEARCHNAME, $userSurname);
+    $userSurnameSearch = $users [$userSurnameID];
+
+    foreach ($animals as $key => $value) {
+        if ($_GET['filter2'] == $value) {
+
+        }
+    }
+
+    switch ($_GET['filter2']){
+        case 'dog':
+            break;
+    }
+
+}
+
+
+
+
+
+
 
 //print_r($users);
 
@@ -80,7 +148,7 @@ sort($userSurnameSearch['animals']);
 <body>
 <div class="container">
 
-    <table class="table table-striped">
+    <table class="table table-striped" hidden>
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -100,11 +168,12 @@ sort($userSurnameSearch['animals']);
             foreach ($maxAgeId as $key => $value){
                 echo "<tr>";
                 echo "<th scope=\"row\">" .($key + 1) ."</th>";
+                echo "<th scope=\"col\">" .$users[$value]['name'] ."</th>";
                 echo "<th scope=\"col\">" .$users[$value]['surname'] ."</th>";
                 echo "<th scope=\"col\">" .$users[$value]['age'] ."</th>";
                 echo "<th scope=\"col\">" .$users[$value]['gender'] ."</th>";
                 if (!empty($users[$value]['avatar'])) {
-                    echo "<th scope=\"col\">" .'<img src="' .$users[$value]['avatar'] .'" class="rounded mx-auto d-block" alt="..." style="height: 50px;">' .'</th>';
+                    echo "<th scope=\"col\">" .'<img src="' .$users[$value]['avatar'] .'" class="rounded mx-auto d-block" alt="..." style="height: 25px;">' .'</th>';
                 }
                 else {
                     echo "<th scope=\"col\"></th>";
@@ -114,8 +183,71 @@ sort($userSurnameSearch['animals']);
             ?>
         </tbody>
     </table>
-<p> животные Merkel </p>
-    <ul>
+    <div class="p"><br><br><br></div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col"><a href="?sort=id<?='&order=' .(!empty($_GET['order']) && $_GET['order'] == 'aesk' ? 'desk' : 'aesk')?>">#</a></th>
+            <?php
+            foreach ($users[0] as $key => $value){
+                echo "<th scope=\"col\" value=\""
+                    .$key
+                    ."\">"
+                    .'<a href="?sort=' .$key .'">'
+                    .$key
+                    ."</a></th>";
+            }
+            ?>
+        </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($users as $key => $value){
+                $id = !empty($_GET['order']) && $_GET['order'] == 'aesk' ? count($users) - $key : $key + 1 ;
+                echo '<tr style="background-color: ' .($key%2 ===0 ? '#aaa' : '#fff') .'">';
+                echo "<th scope=\"row\">" .$id ."</th>";
+                echo "<th scope=\"col\">" .$value['name'] ."</th>";
+                echo "<th scope=\"col\">" .$value['surname'] ."</th>";
+                echo "<th scope=\"col\">" .$value['age'] ."</th>";
+                echo "<th scope=\"col\">" .$value['gender'] ."</th>";
+                if (!empty($value['avatar'])) {
+                    echo "<th scope=\"col\">" .'<img src="' .$value['avatar'] .'" class="rounded mx-auto d-block" alt="..." style="height: 50px;">' .'</th>';
+                }
+                else {
+                    echo "<th scope=\"col\"></th>";
+                }
+                echo "</tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <form action="" method="get">
+        <select name="filter" id="">
+            <option value=""></option>
+            <option value="man"<?= (!empty($_GET['filter']) && $_GET['filter'] == 'man') ? ' selected' : '' ?> >Мужчины</option>
+            <option value="woman" <?= (!empty($_GET['filter']) && $_GET['filter'] == 'woman') ? ' selected' : '' ?> >Женцины</option>
+            <option value="covid" <?= (!empty($_GET['filter']) && $_GET['filter'] == 'covid') ? ' selected' : '' ?> >Риск COVID AGE > 60</option>
+        </select>
+        <select name="filter2" id="">
+            <option value=""></option>
+            <?php
+            foreach ($animals as $key => $value){
+                echo '<option value="'
+                    .$value
+                    .'" >'
+                    .$value
+                    .'</option>'
+                ;
+            }
+            ?>
+        </select>
+        <input type="submit">
+    </form>
+
+
+<p hidden> животные Merkel </p>
+    <ul hidden>
         <?php
         foreach ($userSurnameSearch['animals'] as $key => $value){
             echo "<li  value=\""
