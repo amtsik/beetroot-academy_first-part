@@ -9,6 +9,14 @@ $users = [
         'animals' => ['dog']
     ],
     [
+        'name' => 'Bob',
+        'surname' => 'Sparrow',
+        'age' => 75,
+        'gender' => 'man',
+        'avatar' => 'https://i.ytimg.com/vi/sDnPs_V8M-c/hqdefault.jpg',
+        'animals' => ['dog']
+    ],
+    [
         'name' => 'Alice',
         'surname' => 'Merton',
         'age' => 25,
@@ -35,6 +43,7 @@ $users = [
 ];
 
 if (!empty($_POST)){
+    $_POST['age'] = (int)$_POST['age'];
     $users[] = $_POST;
 }
 
@@ -42,25 +51,21 @@ if (!empty($_POST)){
 
 $ages = array_column($users, 'age');
 
-//echo "<br> ages: ";
-//var_dump($ages);
-//echo "<br>";
 $maxAge = max($ages);
-$maxAgeId = array_search($maxAge, $ages);
-//echo "<br> maxAgeId: ";
-//var_dump($maxAgeId);
-$oldestUser = $users [$maxAgeId];
-//echo "<br> oldestUser: ";
-//var_dump($oldestUser);
+$maxAgeId = array_keys($ages, $maxAge);
 
-define('SEARCHNAME', "Jack");
+define('SEARCHNAME', "Merkel");
 
-$userName = array_column($users, 'name');
-$userNameID = array_search(SEARCHNAME, $userName);
-$userNameSearch = $users [$userNameID];
+$userSurname = array_column($users, 'surname');
+$userSurnameID = array_search(SEARCHNAME, $userSurname);
+$userSurnameSearch = $users [$userSurnameID];
+sort($userSurnameSearch['animals']);
 
-$randomUserId = rand (0, count($users) - 1);
-$randomUser = $users[$randomUserId];
+//var_dump($userSurnameSearchSort);
+//exit();
+
+//$randomUserId = rand (0, count($users) - 1);
+//$randomUser = $users[$randomUserId];
 
 
 
@@ -74,102 +79,54 @@ $randomUser = $users[$randomUserId];
 </head>
 <body>
 <div class="container">
-    <ul>
-        <?php
-        foreach ($oldestUser as $key => $value){
-            if (is_array($value) ) {
-                continue;
-            }
-            else {
-                echo "<li  value=\""
-                    .$key
-                    ."\">"
-                    .$key
-                    ." - "
-                    .$value
-                    ."</li>";
-            }
-        }
-        ?>
-        <li>общее количество пользователей :<?=count($users) ?> </li>
-    </ul>
-    <ul>
-        <?php
-        foreach ($userNameSearch as $key => $value){
-            if (is_array($value) ) {
-                continue;
-            }
-            else {
-                echo "<li  value=\""
-                    .$key
-                    ."\">"
-                    .$key
-                    ." - "
-                    .$value
-                    ."</li>";
-            }
-        }
-        ?>
-    </ul>
-    <ul>
-        <?php
-        foreach ($randomUser as $key => $value){
-            if (is_array($value) ) {
-                continue;
-            }
-            else {
-                echo "<li  value=\""
-                    .$key
-                    ."\">"
-                    .$key
-                    ." - "
-                    .$value
-                    ."</li>";
-            }
-        }
-        ?>
-    </ul>
+
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">#</th>
             <?php
-            foreach ($randomUser as $key => $value){
-                if (is_array($value) ) {
-                    continue;
-                }
-                else {
-                    echo "<th scope=\"col\" value=\""
-                        .$key
-                        ."\">"
-                        .$key
-                        ."</th>";
-                }
+            foreach ($users[0] as $key => $value){
+                echo "<th scope=\"col\" value=\""
+                    .$key
+                    ."\">"
+                    .$key
+                    ."</th>";
             }
             ?>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
             <?php
-            foreach ($randomUser as $key => $value){
-                if (is_array($value) ) {
-                    continue;
+            foreach ($maxAgeId as $key => $value){
+                echo "<tr>";
+                echo "<th scope=\"row\">" .($key + 1) ."</th>";
+                echo "<th scope=\"col\">" .$users[$value]['surname'] ."</th>";
+                echo "<th scope=\"col\">" .$users[$value]['age'] ."</th>";
+                echo "<th scope=\"col\">" .$users[$value]['gender'] ."</th>";
+                if (!empty($users[$value]['avatar'])) {
+                    echo "<th scope=\"col\">" .'<img src="' .$users[$value]['avatar'] .'" class="rounded mx-auto d-block" alt="..." style="height: 50px;">' .'</th>';
                 }
                 else {
-                    echo "<th scope=\"col\" value=\""
-                        .$key
-                        ."\">"
-                        .$value
-                        ."</th>";
+                    echo "<th scope=\"col\"></th>";
                 }
+                echo "</tr>";
             }
             ?>
-        </tr>
-
         </tbody>
     </table>
+<p> животные Merkel </p>
+    <ul>
+        <?php
+        foreach ($userSurnameSearch['animals'] as $key => $value){
+            echo "<li  value=\""
+                .$key
+                ."\">"
+                .$value
+                ."</li>";
+        }
+        ?>
+    </ul>
+
     <a href="/user_min.php">на страницу регистрации</a>
 </div>
 </body>

@@ -1,97 +1,189 @@
 <?php
-//echo "hello";
-//phpinfo();
+error_reporting(E_ALL);
+ini_set('display_errors', true);
 
-define('YEAR', 2020);
-
-$name = 'Ivan';
-$surname = 'Petrov';
-$age = 28;
-$year = 2020;
-//
-//echo "My name is " .$name ." " .$surname ."<br />";
-//echo "My age " .($year - $age) ."<br />";
-//echo "My days " .($age * 365) ."<br />";
-//echo "The year is ceil " . ceil($year / 1000) ."<br />";
-//echo "The year is floor " . floor( $year / 1000) ."<br />";
-//
-//
-//echo "<br />";
-//
-//echo "My name is  $name $surname <br />";
-//echo 'My name is  $name $surname <br />';
-//$born = $year - $age;
-//echo "My age  $born <br />";
-//echo "<br />";
-//$years = $age *365;
-//echo "Year  $years <br />";
-//echo "<br />";
-//$sentc = ceil(YEAR/1000);
-//$sentf = floor(YEAR/1000);
-//echo "The year is ceil  $sentc <br />";
-//echo "The year is floor  $sentf <br />";
-//echo "<br />";
-//
-//define('DOLLARSCOURCES', 27.397);
-//$dollars = 100 * DOLLARSCOURCES;
-//$grn = 100 / DOLLARSCOURCES;
-//echo "100 $ сегодня стоят   $dollars гривен<br />";
-//echo '100 грн сегодня стоят ' .round($grn,2) .' долларов<br />';
-//
-//echo "<br />";
-//$bool = true;
-//$boolfase = false;
-////var_dump($bool);
-//echo "<br />";
-//var_dump((bool)$age);
-//echo "<br />";
-//var_dump((int)$age);
-//echo "<br />";
-//var_dump((array)$age);
-//echo "<br />";
-//var_dump((string)$age);
-//echo "<br />";
-//echo "<br />";
-//
-//echo "<br />";
-//$array = [];
-//var_dump($array);
-//echo "<br />";
-//$array[] = $name;
-//$array[] = 'Text';
-//var_dump($array);
-//
-//echo "<br />";
-//$array[] = $name;
-//$array[] = 'Text';
-////var_dump($array);
-//echo "<br />";
-//echo $array[1];
-//echo "<br />";
-//echo "array <br />";
-//
-//
-
-//$assoc = [];
-//$assoc ['name'] = $name;
-//$assoc ['surname'] = $surname;
-//$assoc ['age'] = $age;
-//$assoc ['year'] = $year;
-////var_dump($assoc);
 $assoc = [
-    'name' => $name,
-    'surname' => $surname,
-    'age' => $age,
-    'year' => $year,
+    'name' => "",
+    'surname' => "",
+    'age' => "",
+    'email' => "",
+    'gender' => [],
+    'animals' => [],
 ];
 
-echo "<br /><br />";
-echo "new output array <br />";
-echo "My name is  {$assoc ['name']}  {$assoc ['surname']} <br />";
-echo "My year of born " .($assoc ['year'] - $assoc ['age']) ."<br />";
-echo "My days " .($age * 365) ."<br />";
-echo "The year is ceil " . ceil($assoc ['year'] / 1000) ."<br />";
-echo "The year is floor " . floor( $assoc ['year'] / 1000) ."<br />";
-echo "<br /><br />";
+if (!empty($_POST)) {
+    $error = [];
+    if (empty($_POST['name'])){
+        $error['name'] = "имя не может быть пустым";
+    }
+    if (empty($_POST['surname'])){
+        $error['surname'] = "фамилия не может быть пустым";
+    }
+    if (empty($_POST['age']) || $_POST['age'] <1 ){
+        $error['age'] = "возраст не корректный";
+    }
+    if (empty($_POST['email'])){
+        $error['email'] = "почта не может быть пустой";
+    }
+}
+$lang = (!empty($_GET['lang'])) ? $_GET['lang'] : "ru";
+
+$labels = [
+    'ru' => [
+        'name' => 'имя',
+        'surname' => 'фамилия',
+        'age' => 'возраст',
+        'email' => 'почта',
+        'gender' => [
+            'name' =>'пол',
+            'list' => ['не определена', 'мужской', 'женский'],
+        ],
+        'animals' => [
+            'name'=>'животные',
+            'list' => [
+                'dog' => 'собака',
+                'cat' => 'кошка',
+                'parrot' => 'попугай',
+                'horse' => 'лошадь'
+            ]
+        ],
+    ],
+    'ua' => [
+        'name' => 'им\'я',
+        'surname' => 'фамилия',
+        'age' => 'вiк',
+        'email' => 'почта',
+        'gender' => [
+            'name' =>'стать',
+            'list' => ['невідома', 'чоловича', 'жиноча'],
+        ],
+        'animals' => [
+            'name'=>'животные',
+            'list' => [
+                'dog' => 'собако',
+                'cat' => 'кішка',
+                'parrot' => 'попуга',
+                'horse' => 'кінь'
+            ]
+        ],
+    ],
+    'en' => [
+        'name' => 'name',
+        'surname' => 'surname',
+        'age' => 'age',
+        'email' => 'email',
+        'gender' => [
+            'name' =>'gender',
+            'list' => ['undefine', 'male', 'female'],
+        ],
+        'animals' => [
+            'name'=>'animals',
+            'list' => [
+                'dog' => 'dog',
+                'cat' => 'cat',
+                'parrot' => 'parrot',
+                'horse' => 'horse'
+            ]
+        ],
+    ],
+];
+
+switch ($lang){
+    case 'ua':
+        $translation = $labels['ua'];
+        break;
+    case 'en':
+        $translation = $labels['en'];
+        break;
+    default:
+        $translation = $labels['ru'];
+        break;
+}
 
 
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" >
+</head>
+<body>
+<br />
+<div class="container">
+    <h3 hidden style="color: red"><?=implode("<br />", $error)?></h3>
+    <form method="post" action="stats.php">
+        <div class="float-right">
+            <a href="?lang=ru" class="badge badge-primary">Русский</a>
+            <a href="?lang=ua" class="badge badge-secondary">Украинский</a>
+            <a href="?lang=en" class="badge badge-success">Английский</a>
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput">Example label</label>
+            <div class="">
+                <label for=""><?= $translation['name']?></label>
+                <input type="text" class="form-control" id="formGroupNameInput" placeholder="<?=$assoc['name']?>" value="<?=$_POST['name'] ?? "" ?>" name="name">
+                <?php if (!empty($error['name'])) : ?>
+                    <small id="passwordHelpInline" class="text-muted">
+                        <?=$error['name'] ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+            <div class="">
+                <label for=""><?= $translation['surname']?></label>
+                <input type="text" class="form-control" id="formGroupSurnameInput" placeholder="<?=$assoc['surname']?>" value="<?= $_POST['surname'] ?? "" ?>" name="surname">
+                <?php if (!empty($error['surname'])) : ?>
+                    <small id="passwordHelpInline" class="text-muted">
+                        <?=$error['surname'] ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+            <div class="">
+                <label for=""><?= $translation['age']?></label>
+                <input type="text" class="form-control" id="formGroupAGEInput" placeholder="<?=$assoc['age']?>" value="<?= $_POST['age'] ?? "" ?>" name="age">
+                <?php if (!empty($error['age'])) : ?>
+                    <small id="passwordHelpInline" class="text-muted">
+                        <?=$error['age'] ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+            <div class="">
+                <label for=""><?= $translation['email']?></label>
+                <input type="email" class="form-control" id="formGroupMailInput" placeholder="<?=$assoc['email']?>" value="<?= $_POST['email'] ?? "" ?>" name="email">
+                <?php if (!empty($error['email'])) : ?>
+                    <small id="passwordHelpInline" class="text-muted">
+                        <?=$error['email'] ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1"><?= $translation['gender']['name']?></label>
+                <select class="form-control" id="exampleFormControlSelect1" name="gender" >
+                    <option  value="undef" selected ><?= $translation['gender']['list'][0]?></option>
+                    <option  value="male" ><?= $translation['gender']['list'][1]?></option>
+                    <option  value="female" ><?= $translation['gender']['list'][2]?></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1"><?= $translation['animals']['name']?></label>
+                <select multiple class="form-control" id="exampleFormControlSelect2" name="animals[]" >
+                    <?php
+                    foreach ($translation['animals']['list'] as $key => $value){
+                        echo "<option  value=\""
+                            .$key
+                            ."\""
+                            .">"
+                            .$value
+                            ."</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+</body>
+</html>
