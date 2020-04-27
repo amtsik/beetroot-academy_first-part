@@ -36,7 +36,19 @@ $chessFigure = [
     63 => ['while' , 'rook'],
 ];
 
-$flag = true
+$flag = true;
+
+echo (isset($_POST['cellrm']));
+
+if(!empty($_POST) && !empty($_POST['chessfigure']) ){
+    $chessFigure = json_decode($_POST['chessfigure'], true);
+
+    if ($_POST['celladd'] !== '' && $_POST['cellrm'] !== '') {
+        $chessFigure[$_POST['celladd']] = $chessFigure[$_POST['cellrm']];
+        unset($chessFigure[$_POST['cellrm']]);
+    }
+
+}
 
 ?>
 <!DOCTYPE html>
@@ -55,11 +67,12 @@ $flag = true
         }
         .cell   {
             width: calc(100% / 8);
-            height: calc(100% / 8);
+            height: calc(100% / 9);
             border: 1px solid;
             float: left;
             box-sizing: border-box;
             position: relative;
+            overflow: hidden;
         }
         .cell .background {
             width: 100%;
@@ -89,6 +102,7 @@ $flag = true
             top: calc( 50% - 20px);
             left: calc( 50% - 21px);
             background-color: transparent;
+            cursor: grab;
         }
 
         .while.figure {
@@ -123,9 +137,24 @@ $flag = true
             position: relative;
         }
         .letters i {
-            position: absolute;
-            top: 30%;
-            left: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 4em;
+            font-style: inherit;
+            text-transform: uppercase;
+        }
+        .hide {
+            display: none;
+        }
+        .hovered {
+            border-color: aqua;
+        }
+        form {
+            margin: 50px auto;
+            text-align: center;
         }
     </style>
 </head>
@@ -143,13 +172,72 @@ $flag = true
             $flag = !$flag;
             $flag = ($i % 8 === 0) ? !$flag : $flag ;
             ?>
-            <div class="cell" style="" >
+            <div class="cell" style="" numofcell="<?=$i?>" >
                 <span class="background <?=$flag ? 'while' : 'black'?>"></span>
-                <i class="arial figure <?=($chessFigure[$i][0] ?? '') .' ' .($chessFigure[$i][1] ?? '')?>"></i>
+                <i draggable="true" class="arial figure <?=($chessFigure[$i][0] ?? '') .' ' .($chessFigure[$i][1] ?? '')?>"></i>
             </div>
         <?php endfor; ?>
     </div>
+    <form id="form" method="post">
+        <textarea type="hidden" name="chessfigure" id="" style="display:none;"><?=json_encode($chessFigure)?></textarea>
+        <input type="hidden" value="" name="celladd">
+        <input type="hidden" value="" name="cellrm">
+        <input type="submit" value="Походить">
+    </form>
 </div>
+
+<script>
+    const dragAndDrop =() => {
+
+        const card = document.querySelectorAll('.figure');
+        const cells = document.querySelectorAll('.cell');
+        const formCellAdd = document.querySelector('[name="celladd"]');
+        const formCellRm = document.querySelector('[name="cellrm"]');
+
+        let figureForDrag;
+        let cellForRm;
+
+        const dragstart = function (){
+            setTimeout(()=> {
+                this.classList.add('hide');
+                figureForDrag = this;
+                cellForRm = this.parentNode.getAttribute('numofcell');
+                console.log(cellForRm);
+            }, 100);
+        };
+        const dragEnd = function (){
+            this.classList.remove('hide');
+            figureForDrag = null;
+        };
+        const dragOver = function (event){
+            event.preventDefault();
+        };
+        const dragEnter = function (){
+        };
+        const dragLeave = function (){
+        };
+
+        const dragDrop = function (){
+            this.append(figureForDrag);
+            formCellRm.setAttribute('value', cellForRm);
+            formCellAdd.setAttribute('value', this.getAttribute('numofcell'));
+        };
+
+        cells.forEach(cell => {
+            cell.addEventListener('dragover', dragOver);
+            cell.addEventListener('dragenter', dragEnter);
+            cell.addEventListener('dragleave', dragLeave);
+            cell.addEventListener('drop', dragDrop);
+        });
+
+        card.forEach(input => {
+            input.addEventListener('dragstart', dragstart);
+            input.addEventListener('dragend', dragEnd);
+        });
+    };
+
+    dragAndDrop();
+</script>
 
 </body>
 </html>
