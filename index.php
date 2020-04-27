@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set('display_errors', true);
+error_reporting(E_ALL);
+ini_set('display_errors', true);
 $chessFigure = [
     0 => ['black' , 'rook'],
     1 => ['black' , 'horse'],
@@ -145,7 +145,7 @@ $flag = true
             ?>
             <div class="cell" style="" >
                 <span class="background <?=$flag ? 'while' : 'black'?>"></span>
-                <i class="arial figure <?=$chessFigure[$i][0] .' ' .$chessFigure[$i][1]?>"></i>
+                <i class="arial figure <?=($chessFigure[$i][0] ?? '') .' ' .($chessFigure[$i][1] ?? '')?>"></i>
             </div>
         <?php endfor; ?>
     </div>
