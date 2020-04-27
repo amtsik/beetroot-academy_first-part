@@ -119,15 +119,15 @@ if ! shopt -oq posix; then
 fi
 
 echo "Hello $USER"
-COMNAME=("git --version" "mysql --v" "mysql --version" "php -v" )
-echo "Number of commands: ${#COMNAME[*]}"
-exec 2>MYERROR
-for ix in ${!COMNAME[*]}
-do
-  echo -e "\e[31mCommands: \e[32m \e[46m${COMNAME[$ix]}\e[0m"
-  RESULT=$(${COMNAME[$ix]}) && echo -e "\e[47m \e[30m $(${COMNAME[$ix]})\e[0m" || echo -e "\e[41m \e[32m Command not found\e[0m"
-done
+COMNAME=("git --version" "mysql --v" "mysql --version" "php -v" )#
+#echo "Number of commands: ${#COMNAME[*]}"
+#exec 2>MYERROR
+#for ix in ${!COMNAME[*]}
+#do
+#  echo -e "\e[31mCommands: \e[32m \e[46m${COMNAME[$ix]}\e[0m"
+#  RESULT=$(${COMNAME[$ix]}) && echo -e "\e[47m \e[30m $(${COMNAME[$ix]})\e[0m" || echo -e "\e[41m \e[32m Command not found\e[0m"
+#done
 
-unset COMNAME
-unset MYERROR
-unset RESULT
+#unset COMNAME
+#unset MYERROR
+#unset RESULT
