@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', true);
+//error_reporting(E_ALL);
+//ini_set('display_errors', true);
 $chessFigure = [
     0 => ['black' , 'rook'],
     1 => ['black' , 'horse'],
@@ -123,7 +123,7 @@ $flag = true
 
 <div class="container">
     <div class="desk" >
-        <?php for ($i = ord('a');$i < ord('h'); $i++) : ?>
+        <?php for ($i = ord('a');$i <= ord('h'); $i++) : ?>
             <div class="cell" style="" >
                 <i class=""><?=chr($i)?></i>
             </div>
