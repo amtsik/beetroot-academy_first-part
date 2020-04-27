@@ -1,105 +1,42 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', true);
-
-$assoc = [
-    'name' => "",
-    'surname' => "",
-    'age' => "",
-    'email' => "",
-    'gender' => [],
-    'animals' => [],
+$chessFigure = [
+    0 => ['black' , 'rook'],
+    1 => ['black' , 'horse'],
+    2 => ['black' , 'bishop'],
+    3 => ['black' , 'ferzin'],
+    4 => ['black' , 'king'],
+    5 => ['black' , 'bishop'],
+    6 => ['black' , 'horse'],
+    7 => ['black' , 'rook'],
+    8 => ['black' , 'pawn'],
+    9 => ['black' , 'pawn'],
+    10 => ['black' , 'pawn'],
+    11 => ['black' , 'pawn'],
+    12 => ['black' , 'pawn'],
+    13 => ['black' , 'pawn'],
+    14 => ['black' , 'pawn'],
+    15 => ['black' , 'pawn'],
+    48 => ['while' , 'pawn'],
+    49 => ['while' , 'pawn'],
+    50 => ['while' , 'pawn'],
+    51 => ['while' , 'pawn'],
+    52 => ['while' , 'pawn'],
+    53 => ['while' , 'pawn'],
+    54 => ['while' , 'pawn'],
+    55 => ['while' , 'pawn'],
+    56 => ['while' , 'rook'],
+    57 => ['while' , 'horse'],
+    58 => ['while' , 'bishop'],
+    59 => ['while' , 'ferzin'],
+    60 => ['while' , 'king'],
+    61 => ['while' , 'bishop'],
+    62 => ['while' , 'horse'],
+    63 => ['while' , 'rook'],
 ];
 
-if (!empty($_POST)) {
-    $error = [];
-    if (empty($_POST['name'])){
-        $error['name'] = "имя не может быть пустым";
-    }
-    if (empty($_POST['surname'])){
-        $error['surname'] = "фамилия не может быть пустым";
-    }
-    if (empty($_POST['age']) || $_POST['age'] <1 ){
-        $error['age'] = "возраст не корректный";
-    }
-    if (empty($_POST['email'])){
-        $error['email'] = "почта не может быть пустой";
-    }
-}
-$lang = (!empty($_GET['lang'])) ? $_GET['lang'] : "ru";
-
-$labels = [
-    'ru' => [
-        'name' => 'имя',
-        'surname' => 'фамилия',
-        'age' => 'возраст',
-        'email' => 'почта',
-        'gender' => [
-            'name' =>'пол',
-            'list' => ['не определена', 'мужской', 'женский'],
-        ],
-        'animals' => [
-            'name'=>'животные',
-            'list' => [
-                'dog' => 'собака',
-                'cat' => 'кошка',
-                'parrot' => 'попугай',
-                'horse' => 'лошадь'
-            ]
-        ],
-    ],
-    'ua' => [
-        'name' => 'им\'я',
-        'surname' => 'фамилия',
-        'age' => 'вiк',
-        'email' => 'почта',
-        'gender' => [
-            'name' =>'стать',
-            'list' => ['невідома', 'чоловича', 'жиноча'],
-        ],
-        'animals' => [
-            'name'=>'животные',
-            'list' => [
-                'dog' => 'собако',
-                'cat' => 'кішка',
-                'parrot' => 'попуга',
-                'horse' => 'кінь'
-            ]
-        ],
-    ],
-    'en' => [
-        'name' => 'name',
-        'surname' => 'surname',
-        'age' => 'age',
-        'email' => 'email',
-        'gender' => [
-            'name' =>'gender',
-            'list' => ['undefine', 'male', 'female'],
-        ],
-        'animals' => [
-            'name'=>'animals',
-            'list' => [
-                'dog' => 'dog',
-                'cat' => 'cat',
-                'parrot' => 'parrot',
-                'horse' => 'horse'
-            ]
-        ],
-    ],
-];
-
-switch ($lang){
-    case 'ua':
-        $translation = $labels['ua'];
-        break;
-    case 'en':
-        $translation = $labels['en'];
-        break;
-    default:
-        $translation = $labels['ru'];
-        break;
-}
-
+$flag = true
 
 ?>
 <!DOCTYPE html>
@@ -108,82 +45,97 @@ switch ($lang){
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" >
+
+    <style type="text/css">
+        .desk {
+            width: 800px;
+            height: 800px;
+            background-color: #aaa;
+            margin: 0 auto;
+        }
+        .cell   {
+            width: calc(100% / 8);
+            height: calc(100% / 8);
+            border: 1px solid;
+            float: left;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .cell .background {
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .while {
+            background-color: #aaa;
+            border-color: #bbb;
+        }
+
+
+        .black {
+            background-color: #555;
+            border-color: #444;
+        }
+        .arial {
+            font: normal normal normal 42px/1 Arial;
+            text-align: center;
+            margin: auto;
+        }
+        .figure {
+            position: absolute;
+            top: calc( 50% - 20px);
+            left: calc( 50% - 21px);
+            background-color: transparent;
+        }
+
+        .while.figure {
+            color: #fff;
+        }
+
+        .black.figure {
+            color: #000;
+        }
+
+        .rook:before {
+            content:"♖"
+        }
+        .horse:before {
+            content:"♘"
+        }
+        .bishop:before {
+            content:"♗"
+        }
+        .ferzin:before {
+            content:"♕"
+        }
+        .king:before {
+            content:"♔"
+        }
+        .pawn:before {
+            content:"♙"
+        }
+    </style>
 </head>
 <body>
-<br />
+
 <div class="container">
-    <h3 hidden style="color: red"><?=implode("<br />", $error)?></h3>
-    <form method="post" action="stats.php">
-        <div class="float-right">
-            <a href="?lang=ru" class="badge badge-primary">Русский</a>
-            <a href="?lang=ua" class="badge badge-secondary">Украинский</a>
-            <a href="?lang=en" class="badge badge-success">Английский</a>
-        </div>
-        <div class="form-group">
-            <label for="formGroupExampleInput">Example label</label>
-            <div class="">
-                <label for=""><?= $translation['name']?></label>
-                <input type="text" class="form-control" id="formGroupNameInput" placeholder="<?=$assoc['name']?>" value="<?=$_POST['name'] ?? "" ?>" name="name">
-                <?php if (!empty($error['name'])) : ?>
-                    <small id="passwordHelpInline" class="text-muted">
-                        <?=$error['name'] ?>
-                    </small>
-                <?php endif; ?>
+    <div class="desk" >
+        <?php for ($i = 0;$i <64; $i++) : ?>
+            <?php
+            $flag = !$flag;
+            $flag = ($i % 8 === 0) ? !$flag : $flag ;
+            ?>
+            <div class="cell" style="" >
+                <span class="background <?=$flag ? 'while' : 'black'?>"></span>
+                <i class="arial figure <?=$chessFigure[$i][0] .' ' .$chessFigure[$i][1]?>"></i>
             </div>
-            <div class="">
-                <label for=""><?= $translation['surname']?></label>
-                <input type="text" class="form-control" id="formGroupSurnameInput" placeholder="<?=$assoc['surname']?>" value="<?= $_POST['surname'] ?? "" ?>" name="surname">
-                <?php if (!empty($error['surname'])) : ?>
-                    <small id="passwordHelpInline" class="text-muted">
-                        <?=$error['surname'] ?>
-                    </small>
-                <?php endif; ?>
-            </div>
-            <div class="">
-                <label for=""><?= $translation['age']?></label>
-                <input type="text" class="form-control" id="formGroupAGEInput" placeholder="<?=$assoc['age']?>" value="<?= $_POST['age'] ?? "" ?>" name="age">
-                <?php if (!empty($error['age'])) : ?>
-                    <small id="passwordHelpInline" class="text-muted">
-                        <?=$error['age'] ?>
-                    </small>
-                <?php endif; ?>
-            </div>
-            <div class="">
-                <label for=""><?= $translation['email']?></label>
-                <input type="email" class="form-control" id="formGroupMailInput" placeholder="<?=$assoc['email']?>" value="<?= $_POST['email'] ?? "" ?>" name="email">
-                <?php if (!empty($error['email'])) : ?>
-                    <small id="passwordHelpInline" class="text-muted">
-                        <?=$error['email'] ?>
-                    </small>
-                <?php endif; ?>
-            </div>
-            <div class="form-group">
-                <label for="exampleFormControlSelect1"><?= $translation['gender']['name']?></label>
-                <select class="form-control" id="exampleFormControlSelect1" name="gender" >
-                    <option  value="undef" selected ><?= $translation['gender']['list'][0]?></option>
-                    <option  value="male" ><?= $translation['gender']['list'][1]?></option>
-                    <option  value="female" ><?= $translation['gender']['list'][2]?></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="exampleFormControlSelect1"><?= $translation['animals']['name']?></label>
-                <select multiple class="form-control" id="exampleFormControlSelect2" name="animals[]" >
-                    <?php
-                    foreach ($translation['animals']['list'] as $key => $value){
-                        echo "<option  value=\""
-                            .$key
-                            ."\""
-                            .">"
-                            .$value
-                            ."</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
+        <?php endfor; ?>
+    </div>
 </div>
-<button type="submit" class="btn btn-primary">Submit</button>
-</form>
-</div>
+
 </body>
 </html>
+
