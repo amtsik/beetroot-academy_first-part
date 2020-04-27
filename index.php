@@ -117,6 +117,16 @@ $flag = true
         .pawn:before {
             content:"♙"
         }
+        .letters {
+            display: block;
+            margin: auto;
+            position: relative;
+        }
+        .letters i {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +134,7 @@ $flag = true
 <div class="container">
     <div class="desk" >
         <?php for ($i = ord('a');$i <= ord('h'); $i++) : ?>
-            <div class="cell" style="" >
+            <div class="cell letters" style="" >
                 <i class=""><?=chr($i)?></i>
             </div>
         <?php endfor; ?>
